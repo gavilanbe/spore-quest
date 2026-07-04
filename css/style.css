@@ -1,0 +1,152 @@
+/* SPORE QUEST · carcasa Seta Boy Color (GBC Kiwi) */
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;overflow:hidden;overscroll-behavior:none}
+  body{
+    background:#10101a radial-gradient(circle at 50% 26%, #262640 0%, #10101a 68%);
+    display:flex;justify-content:center;align-items:center;
+    touch-action:none;-webkit-user-select:none;user-select:none;
+    font-family:'Verdana',sans-serif;
+  }
+  /* ============ CARCASA GBC (Kiwi) ============ */
+  #shell{
+    /* el tercer limite evita que la carcasa se salga en pantallas bajas
+       (la GBC completa es ~1.55 veces mas alta que ancha) */
+    width:min(96vw, 414px, 62vh);
+    max-height:98vh;
+    overflow:hidden;
+    background:
+      linear-gradient(100deg, rgba(255,255,255,.28) 0%, rgba(255,255,255,0) 22%),
+      linear-gradient(165deg,#9ad355 0%,#7ab73c 46%,#5e9a29 88%,#4d8020 100%);
+    border-radius:18px 18px 84px 18px;
+    box-shadow:
+      0 22px 46px rgba(0,0,0,.6),
+      inset 0 2px 0 rgba(255,255,255,.4),
+      inset 3px 0 6px rgba(255,255,255,.14),
+      inset -4px -8px 14px rgba(0,0,0,.28);
+    padding:10px 12px 18px;
+    display:flex;flex-direction:column;gap:9px;
+    position:relative;
+  }
+  /* ranuras decorativas superiores (como la GBC real) */
+  #shell::before{
+    content:'';position:absolute;top:5px;left:22px;right:22px;height:3px;
+    border-top:1px solid rgba(0,0,0,.25);
+    border-bottom:1px solid rgba(255,255,255,.3);
+    border-radius:2px;
+  }
+  /* ============ PANTALLA ============ */
+  #bezel{
+    background:linear-gradient(180deg,#3a3a46 0%,#26262f 30%,#1e1e26 100%);
+    border-radius:12px 12px 34px 12px;
+    padding:12px 16px 11px;
+    box-shadow:
+      inset 0 4px 10px rgba(0,0,0,.75),
+      inset 0 -1px 2px rgba(255,255,255,.08),
+      0 1px 0 rgba(255,255,255,.3);
+  }
+  #bezel-top{
+    display:flex;align-items:center;gap:8px;margin-bottom:8px;
+    color:#8b93a6;font-size:8px;letter-spacing:1.6px;font-style:italic;font-weight:bold;
+  }
+  #led{
+    width:8px;height:8px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,#ff7a7a,#e01818 70%);
+    box-shadow:0 0 8px 3px rgba(255,50,50,.75), inset 0 -1px 1px rgba(0,0,0,.4);
+    animation:ledpulse 3.2s ease-in-out infinite;
+  }
+  @keyframes ledpulse{0%,100%{box-shadow:0 0 8px 3px rgba(255,50,50,.75)}50%{box-shadow:0 0 5px 2px rgba(255,50,50,.5)}}
+  #bezel-top .line{flex:1;height:2px;background:linear-gradient(90deg,#5a6072,#333743);border-radius:1px}
+  #screenwrap{
+    position:relative;border-radius:3px;overflow:hidden;
+    box-shadow:inset 0 0 0 2px rgba(0,0,0,.65), 0 0 0 1px rgba(255,255,255,.05);
+  }
+  canvas{
+    width:100%;display:block;background:#081820;
+    image-rendering:pixelated;image-rendering:crisp-edges;
+  }
+  /* cristal: rejilla LCD sutil + reflejo diagonal */
+  #glass{
+    position:absolute;inset:0;pointer-events:none;
+    background:
+      linear-gradient(112deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,.03) 15%, transparent 26%),
+      radial-gradient(ellipse at 50% 120%, rgba(8,24,32,.14), transparent 55%);
+  }
+  #bezel-bottom{
+    margin-top:8px;text-align:center;
+    color:#cede54;font-size:11px;font-weight:bold;font-style:italic;letter-spacing:2px;
+    text-shadow:0 1px 0 rgba(0,0,0,.6);
+  }
+  #bezel-bottom span{
+    background:linear-gradient(90deg,#e05656,#e8c440,#58c458,#5890e0,#b070d8);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    font-size:9px;letter-spacing:1px;font-style:normal;
+  }
+  /* ============ CONTROLES ============ */
+  #controls{display:flex;justify-content:space-between;align-items:center;padding:2px 2px}
+  #dpad{
+    position:relative;width:128px;height:128px;flex-shrink:0;
+    filter:drop-shadow(0 4px 4px rgba(0,0,0,.4));
+  }
+  .dp{
+    position:absolute;
+    background:linear-gradient(180deg,#454550,#2e2e37 60%,#26262e);
+    width:44px;height:44px;
+    box-shadow:inset 0 1px 1px rgba(255,255,255,.18);
+  }
+  #dp-u{left:42px;top:0;border-radius:9px 9px 0 0}
+  #dp-d{left:42px;bottom:0;border-radius:0 0 9px 9px}
+  #dp-l{left:0;top:42px;border-radius:9px 0 0 9px}
+  #dp-r{right:0;top:42px;border-radius:0 9px 9px 0}
+  /* flechas impresas */
+  .dp::after{content:'';position:absolute;border:7px solid transparent}
+  #dp-u::after{left:15px;top:12px;border-bottom:10px solid #191920;border-top:none}
+  #dp-d::after{left:15px;bottom:12px;border-top:10px solid #191920;border-bottom:none}
+  #dp-l::after{top:15px;left:12px;border-right:10px solid #191920;border-left:none}
+  #dp-r::after{top:15px;right:12px;border-left:10px solid #191920;border-right:none}
+  #dp-c{left:42px;top:42px;background:#2e2e37}
+  #dp-c::after{
+    content:'';position:absolute;inset:9px;border-radius:50%;border:none;
+    background:radial-gradient(circle at 35% 28%,#50505c,#23232b 72%);
+    box-shadow:inset 0 2px 4px rgba(0,0,0,.6);
+  }
+  .dp.on{background:#17171d;box-shadow:inset 0 2px 5px rgba(0,0,0,.8)}
+  #btns{
+    display:flex;gap:14px;transform:rotate(-24deg);flex-shrink:0;margin-right:8px;margin-top:-6px;
+  }
+  .btn{
+    width:60px;height:60px;border-radius:50%;
+    background:radial-gradient(circle at 34% 26%,#d0578f,#a02b60 58%,#7c1c49 100%);
+    box-shadow:
+      0 5px 8px rgba(0,0,0,.45),
+      inset 0 3px 4px rgba(255,255,255,.4),
+      inset 0 -4px 6px rgba(0,0,0,.35);
+    color:#f7dcea;font-weight:bold;font-size:17px;
+    display:flex;align-items:center;justify-content:center;
+    text-shadow:0 -1px 0 rgba(0,0,0,.45);
+    position:relative;
+  }
+  .btn.on{
+    transform:translateY(3px);
+    box-shadow:0 1px 2px rgba(0,0,0,.4), inset 0 3px 8px rgba(0,0,0,.5);
+  }
+  #btn-b{margin-top:24px}
+
+  #mid{display:flex;justify-content:center;gap:24px;margin-top:2px;margin-bottom:26px}
+  .pill{
+    width:48px;height:14px;border-radius:8px;transform:rotate(-24deg);
+    background:linear-gradient(180deg,#454550,#26262e);
+    box-shadow:0 2px 3px rgba(0,0,0,.45), inset 0 1px 1px rgba(255,255,255,.25);
+    position:relative;
+  }
+  .pill:active{transform:rotate(-24deg) translateY(2px)}
+  .pill span{
+    position:absolute;top:16px;left:50%;transform:translateX(-50%);
+    font-size:7px;font-weight:bold;letter-spacing:1px;color:#3f6b1c;
+    text-shadow:0 1px 0 rgba(255,255,255,.3);
+  }
+  #speaker{
+    position:absolute;right:14px;bottom:14px;width:64px;height:46px;
+    transform:rotate(-24deg);transform-origin:bottom right;
+    background:repeating-linear-gradient(90deg,transparent 0 7px, rgba(0,0,0,.30) 7px 9px, #558a24 9px 12px);
+    border-radius:7px;opacity:.85;pointer-events:none;
+  }

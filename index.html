@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>SPORE QUEST · Seta Boy Color</title>
+<meta name="description" content="Roguelike estilo Game Boy Color: Bolet, la última espora libre de Micelia, contra la Marchitez. 4 estaciones rotativas, mejoras de nivel, Rey Moho cada 8 salas y lore en las estelas. Con carcasa Seta Boy y controles táctiles.">
+<meta name="theme-color" content="#10101a">
+<meta property="og:title" content="SPORE QUEST · Seta Boy Color">
+<meta property="og:description" content="Roguelike GBC de estaciones: guía a Bolet contra la Marchitez, sala a sala.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍄</text></svg>">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="shell">
+  <div id="bezel">
+    <div id="bezel-top"><div class="line"></div><div id="led"></div><span>POWER&nbsp;·&nbsp;BATTERY</span><div class="line"></div></div>
+    <div id="screenwrap"><canvas id="game" width="160" height="144"></canvas><div id="glass"></div></div>
+    <div id="bezel-bottom">SETA BOY <span>COLOR</span></div>
+  </div>
+  <div id="controls">
+    <div id="dpad">
+      <div class="dp" id="dp-u"></div>
+      <div class="dp" id="dp-d"></div>
+      <div class="dp" id="dp-l"></div>
+      <div class="dp" id="dp-r"></div>
+      <div class="dp" id="dp-c"></div>
+    </div>
+    <div id="btns">
+      <div class="btn" id="btn-b" data-eng="B">B</div>
+      <div class="btn" id="btn-a" data-eng="A">A</div>
+    </div>
+  </div>
+  <div id="mid">
+    <div class="pill" id="p-select"><span>SELECT</span></div>
+    <div class="pill" id="p-start"><span>START</span></div>
+  </div>
+  <div id="speaker"></div>
+</div>
+
+<!-- Capas en orden de carga: cada una depende solo de las anteriores
+     (o de funciones que se invocan en tiempo de ejecución). -->
+<script src="js/00-screen.js"></script>
+<script src="js/01-data.js"></script>
+<script src="js/02-text.js"></script>
+<script src="js/03-worldgen.js"></script>
+<script src="js/04-audio.js"></script>
+<script src="js/05-input.js"></script>
+<script src="js/06-progression.js"></script>
+<script src="js/07-title-art.js"></script>
+<script src="js/08-state.js"></script>
+<script src="js/09-entities.js"></script>
+<script src="js/10-actions.js"></script>
+<script src="js/11-update.js"></script>
+<script src="js/12-render.js"></script>
+<script src="js/13-main.js"></script>
+</body>
+</html>
