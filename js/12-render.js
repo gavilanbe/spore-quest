@@ -395,9 +395,19 @@ function render(){
       if(season===3){ ctx.fillStyle=PAL.white; ctx.fillRect(fx,fy,3,2); }
       else { ctx.fillStyle=season===2?'#c84828':(season===1?PAL.gold:'#f0a0c8'); ctx.fillRect(fx,fy,2,2); }
     }
-    /* --- el Gran Micelio (izq) y Bolet heroe con bufanda (der) --- */
+    /* --- el Gran Micelio (izq) y Bolet heroe en arte grande (der) --- */
     drawGreatTree(36,102);
-    drawBoletHero(114,112);
+    drawBoletHero(126,140);
+    /* --- hierba de primer plano: briznas oscuras que dan profundidad --- */
+    ctx.fillStyle=P.grassDk;
+    for(let i=0;i<44;i++){
+      const bx3=i*4-2+((tRnd(7,i,4)*3)|0);
+      let bh2=2+((tRnd(13,i,6)*4)|0);
+      if(bx3>42&&bx3<118&&bh2>3)bh2=3; // despejar la zona del copyright
+      const sw2=(((time*2.2)|0)&1)&&bh2>3?1:0;
+      ctx.fillRect(bx3+sw2,H-bh2,1,bh2);
+      if(bh2>4)ctx.fillRect(bx3+sw2+1,H-bh2+1,1,2);
+    }
     /* --- particulas de la estacion --- */
     for(const p of tparts) drawTPart(p);
     /* --- emblema + LOGO con degradado de dos tonos --- */
