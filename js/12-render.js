@@ -315,114 +315,109 @@ function render(){
   }
 
   if(state==='title'){
-    /* --- cielo en 3 bandas con dithering + astro por estacion --- */
+    const P=CP();
+    /* --- cielo en 4 bandas con dithering + resplandor de horizonte --- */
     const TSKY=[['#88c8f0','#a8dcf8','#cceaf8'],['#60b4ec','#90d0f4','#b8e4f8'],
                 ['#d88848','#eca868','#f4cc90'],['#98b0c4','#b8ccd8','#d4e2ea']][season];
+    const HGLOW=['#e2f4ea','#d6f0f8','#f8dca8','#e6eef2'][season];
     ctx.fillStyle=TSKY[0]; ctx.fillRect(0,0,W,30);
-    ctx.fillStyle=TSKY[1]; ctx.fillRect(0,30,W,32);
-    ctx.fillStyle=TSKY[2]; ctx.fillRect(0,62,W,24);
+    ctx.fillStyle=TSKY[1]; ctx.fillRect(0,30,W,26);
+    ctx.fillStyle=TSKY[2]; ctx.fillRect(0,56,W,20);
+    ctx.fillStyle=HGLOW;   ctx.fillRect(0,76,W,12);
     for(let y=30;y<34;y+=2)for(let x=((y>>1)&1)*2;x<W;x+=4){ctx.fillStyle=TSKY[0];ctx.fillRect(x,y,2,2);}
-    for(let y=62;y<66;y+=2)for(let x=((y>>1)&1)*2;x<W;x+=4){ctx.fillStyle=TSKY[1];ctx.fillRect(x,y,2,2);}
-    // sol / sol de otono / luna de invierno
-    if(season===3){
-      ctx.fillStyle=PAL.white;
-      ctx.fillRect(14,32,6,6); ctx.fillRect(13,33,8,4);
-      ctx.fillStyle=TSKY[1]; ctx.fillRect(16,32,6,5);
-      if(((time*2)|0)&1){ctx.fillStyle=PAL.white;ctx.fillRect(30,28,1,1);ctx.fillRect(24,42,1,1);}
-    } else {
-      const sy0=season===2?46:32, sc=season===2?'#f0d048':PAL.gold;
-      ctx.fillStyle=sc;
-      ctx.fillRect(14,sy0,6,6); ctx.fillRect(13,sy0+1,8,4);
-      ctx.fillStyle='#f8f0c0'; ctx.fillRect(15,sy0+1,2,2);
-      const f=((time*2)|0)&1; ctx.fillStyle=sc;
-      if(f){ctx.fillRect(16,sy0-3,2,2);ctx.fillRect(16,sy0+7,2,2);ctx.fillRect(10,sy0+2,2,2);ctx.fillRect(22,sy0+2,2,2);}
-      else{ctx.fillRect(11,sy0-2,2,2);ctx.fillRect(21,sy0-2,2,2);ctx.fillRect(11,sy0+6,2,2);ctx.fillRect(21,sy0+6,2,2);}
-    }
-    // pajaros migrando (primavera y verano)
+    for(let y=56;y<60;y+=2)for(let x=((y>>1)&1)*2;x<W;x+=4){ctx.fillStyle=TSKY[1];ctx.fillRect(x,y,2,2);}
+    for(let y=76;y<80;y+=2)for(let x=((y>>1)&1)*2;x<W;x+=4){ctx.fillStyle=TSKY[2];ctx.fillRect(x,y,2,2);}
+    drawSunMoon();
+    /* pajaros migrando (primavera y verano) */
     if(season<2){
       for(let i=0;i<3;i++){
-        const bx=W+20-((time*11+i*76)%(W+50)), by=36+i*8+Math.round(Math.sin(time*3+i)*2);
+        const bx=W+20-((time*11+i*76)%(W+50)), by=50+i*7+Math.round(Math.sin(time*3+i)*2);
         const f=(((time*6)|0)+i)&1;
         ctx.fillStyle='#304050';
         if(f){ctx.fillRect(bx,by,2,1);ctx.fillRect(bx+3,by,2,1);ctx.fillRect(bx+2,by+1,1,1);}
         else{ctx.fillRect(bx,by-1,2,1);ctx.fillRect(bx+3,by-1,2,1);ctx.fillRect(bx+2,by,1,1);}
       }
     }
-    drawCloud(((time*4)%230)-45, 68);
-    drawCloud(((time*4+120)%230)-45, 76);
-    /* --- silueta de bosque lejano --- */
-    const P=CP();
-    ctx.fillStyle=P.treeDk;
-    for(let i=0;i<12;i++){
-      const bx=i*14-4, bh=6+((tRnd(31,i,2)*7)|0);
-      ctx.fillRect(bx,86-bh,10,bh);
-      ctx.fillRect(bx+2,86-bh-3,6,3);
-    }
-    /* --- colina con camino, rocas, charca y hierba viva --- */
-    ctx.fillStyle=P.grass2; ctx.fillRect(0,86,W,5);
-    ctx.fillStyle=P.grass;  ctx.fillRect(0,91,W,53);
+    drawCloudBig(((time*3)%260)-52, 52);
+    drawCloud(((time*4+120)%230)-45, 66);
+    drawCloud(((time*2.4+40)%250)-45, 72);
+    /* --- bosque lejano en dos profundidades --- */
+    drawFarWoods(88);
+    /* --- la colina: cesped con trama regular, no ruido --- */
+    ctx.fillStyle=P.grass2; ctx.fillRect(0,88,W,5);
+    ctx.fillStyle=P.grass;  ctx.fillRect(0,93,W,51);
+    for(let x=(93&1);x<W;x+=2){ctx.fillStyle=P.grass2;if(((x+93)&3)===1)ctx.fillRect(x,93,1,2);}
     ctx.fillStyle=P.grassDk;
-    for(let i=0;i<22;i++){
-      const r=tRnd(5,i,3);
-      ctx.fillRect((r*156)|0, 94+((tRnd(9,i,1)*46)|0), 2,1);
+    for(let y=98;y<144;y+=4)for(let x=((y>>2)&1)*4;x<W;x+=8){
+      if(((tRnd(9,x>>3,y>>2)*10)|0)>6)continue;
+      ctx.fillRect(x,y,2,1);
     }
-    // camino serpenteante hasta el Gran Micelio
-    const path=[[76,138],[70,131],[62,124],[54,117],[47,111],[40,106]];
-    for(const [px2,py2] of path){
-      ctx.fillStyle=P.path; ctx.fillRect(px2-4,py2,9,5);
-      ctx.fillStyle=P.pathDk; ctx.fillRect(px2-3,py2+3,2,1); ctx.fillRect(px2+2,py2+1,1,1);
+    /* --- camino serpenteante hasta la puerta del Gran Micelio --- */
+    for(let t=0;t<=1;t+=0.09){
+      const px2=Math.round(84-40*t+Math.sin(t*5.2)*7);
+      const py2=Math.round(142-28*t);
+      const w2=Math.round(10-4*t);
+      ctx.fillStyle=P.path;   ctx.fillRect(px2-(w2>>1),py2,w2,4);
+      ctx.fillStyle=P.pathDk; ctx.fillRect(px2-(w2>>1)+1,py2+3,w2-2,1);
     }
-    // rocas
-    ctx.fillStyle=PAL.stoneDk; ctx.fillRect(94,120,7,5); ctx.fillRect(58,133,6,4);
-    ctx.fillStyle=PAL.stone;   ctx.fillRect(95,120,5,3); ctx.fillRect(59,133,4,2);
-    ctx.fillStyle=PAL.stoneLt; ctx.fillRect(95,120,2,1); ctx.fillRect(59,133,1,1);
-    // charca reflejando el cielo
-    ctx.fillStyle=P.grassDk; ctx.fillRect(3,127,20,10);
-    ctx.fillStyle=TSKY[1]; ctx.fillRect(4,128,18,8);
-    ctx.fillStyle=TSKY[0]; ctx.fillRect(6,129,8,2);
-    if(((time*3)|0)&1){ctx.fillStyle=PAL.white;ctx.fillRect(15,131,3,1);}
-    // matas de hierba que se mecen
-    for(const [gx0,gy0] of [[28,116],[88,128],[142,118]]){
+    ctx.fillStyle=P.pathDk;
+    ctx.fillRect(76,132,2,1); ctx.fillRect(66,122,2,1); ctx.fillRect(58,114,1,1);
+    /* --- charca que refleja el cielo, con juncos --- */
+    ctx.fillStyle=P.grassDk; ctx.fillRect(3,125,26,12);
+    ctx.fillStyle=TSKY[1];   ctx.fillRect(4,126,24,10);
+    ctx.fillStyle=TSKY[0];   ctx.fillRect(6,127,12,3);
+    ctx.fillStyle=HGLOW;     ctx.fillRect(8,128,6,1);
+    if(((time*3)|0)&1){ctx.fillStyle=PAL.white;ctx.fillRect(19,131,3,1);}
+    for(const [rx2,rh,ph2] of [[30,10,0],[33,8,2],[27,7,4]]){ /* juncos */
+      const sw3=Math.round(Math.sin(time*1.4+ph2)*1.5);
+      ctx.fillStyle=P.treeDk; ctx.fillRect(rx2+sw3,124-rh,1,rh+2);
+      ctx.fillStyle='#7a4c20'; ctx.fillRect(rx2+sw3-1,120-rh,3,4);
+      ctx.fillStyle='#a87840'; ctx.fillRect(rx2+sw3-1,120-rh,1,4);
+    }
+    /* rocas y matas que se mecen */
+    ctx.fillStyle=PAL.stoneDk; ctx.fillRect(66,124,7,5); ctx.fillRect(14,112,6,4);
+    ctx.fillStyle=PAL.stone;   ctx.fillRect(67,124,5,3); ctx.fillRect(15,112,4,2);
+    ctx.fillStyle=PAL.stoneLt; ctx.fillRect(67,124,2,1); ctx.fillRect(15,112,1,1);
+    for(const [gx0,gy0] of [[24,108],[56,124],[92,112]]){
       const sway=(((time*2.5)|0)&1)?1:0;
       ctx.fillStyle=P.grassDk;
       ctx.fillRect(gx0,gy0-3,1,3); ctx.fillRect(gx0+2,gy0-4,1,4); ctx.fillRect(gx0+4,gy0-3,1,3);
       ctx.fillStyle=P.grass2;
-      ctx.fillRect(gx0+sway-0,gy0-4,1,1); ctx.fillRect(gx0+2+sway,gy0-5,1,1); ctx.fillRect(gx0+4+sway,gy0-4,1,1);
+      ctx.fillRect(gx0+sway,gy0-4,1,1); ctx.fillRect(gx0+2+sway,gy0-5,1,1); ctx.fillRect(gx0+4+sway,gy0-4,1,1);
     }
-    // florecitas de temporada
+    /* florecitas de temporada */
     for(let i=0;i<5;i++){
-      const fx=30+((tRnd(3,i,8)*118)|0), fy=110+((tRnd(11,i,2)*26)|0);
+      const fx=8+((tRnd(3,i,8)*82)|0), fy=104+((tRnd(11,i,2)*32)|0);
       if(season===3){ ctx.fillStyle=PAL.white; ctx.fillRect(fx,fy,3,2); }
       else { ctx.fillStyle=season===2?'#c84828':(season===1?PAL.gold:'#f0a0c8'); ctx.fillRect(fx,fy,2,2); }
     }
     /* --- el Gran Micelio (izq) y Bolet heroe en arte grande (der) --- */
-    drawGreatTree(36,102);
+    drawGreatTree(38,116);
     drawBoletHero(126,140);
-    /* --- hierba de primer plano: briznas oscuras que dan profundidad --- */
+    /* --- hierba de primer plano --- */
     ctx.fillStyle=P.grassDk;
     for(let i=0;i<44;i++){
       const bx3=i*4-2+((tRnd(7,i,4)*3)|0);
       let bh2=2+((tRnd(13,i,6)*4)|0);
-      if(bx3>42&&bx3<118&&bh2>3)bh2=3; // despejar la zona del copyright
+      if(bx3>42&&bx3<118&&bh2>3)bh2=3;
       const sw2=(((time*2.2)|0)&1)&&bh2>3?1:0;
       ctx.fillRect(bx3+sw2,H-bh2,1,bh2);
       if(bh2>4)ctx.fillRect(bx3+sw2+1,H-bh2+1,1,2);
     }
     /* --- particulas de la estacion --- */
     for(const p of tparts) drawTPart(p);
-    /* --- emblema + LOGO con degradado de dos tonos --- */
-    drawLogoEmblem(80,3);
-    const gx1=(W-textW('SPORE',4))/2, gx2=(W-textW('QUEST',4))/2;
-    drawTextBevel('SPORE',gx1,8,4,'#ecc44c','#f8f0c0','#8c5c14','#c89430');
-    drawTextBevel('QUEST',gx2,31,4,'#ecc44c','#f8f0c0','#8c5c14','#c89430');
-    // estela de esporas cruzando el logo
+    /* --- emblema + LOGOTIPO dorado en arco --- */
+    drawLogoEmblem(80,2);
+    drawBigWord('SPORE',5,[2,1,0,1,2]);
+    drawBigWord('QUEST',26,[2,1,0,1,2]);
+    /* estela de esporas cruzando el logo */
     for(let k=0;k<7;k++){
-      const sx2=gx2-14+k*16, sy2=52-k*6.5;
+      const sx2=42+k*13, sy2=50-k*6;
       if((((time*3)|0)+k)&1)continue;
       ctx.fillStyle=k===6?PAL.spore:PAL.sporeDk;
       ctx.fillRect(sx2,Math.round(sy2),k===6?3:2,k===6?3:2);
     }
-    const spts=[[gx1+6,12],[gx1+52,20],[gx2+22,35],[gx2+66,44]];
+    const spts=[[48,10],[104,14],[62,32],[112,38]];
     const spN=((titleT/1.2)|0)%spts.length, st=(titleT%1.2);
     if(st<0.36){
       const sz=st<0.18?1+((st/0.06)|0):3-(((st-0.18)/0.06)|0);
@@ -432,15 +427,15 @@ function render(){
     }
     /* --- placa de madera con hojas laterales --- */
     const pt='EL ORACULO DE LAS ESTACIONES';
-    const pw=textW(pt,1)+10, px=(W-pw)/2, py=55;
+    const pw=textW(pt,1)+10, px=(W-pw)/2, py=52;
     ctx.fillStyle=PAL.black; ctx.fillRect(px-1,py-1,pw+2,11);
     ctx.fillStyle=PAL.dirtDk; ctx.fillRect(px,py,pw,9);
     ctx.fillStyle=PAL.dirt;   ctx.fillRect(px+1,py+1,pw-2,7);
     ctx.fillStyle='#8c6438';  ctx.fillRect(px+1,py+1,pw-2,1);
+    ctx.fillStyle='#48301c';  ctx.fillRect(px+3,py+7,pw-6,1);
     ctx.fillStyle=PAL.gold;
     ctx.fillRect(px+2,py+4,1,1); ctx.fillRect(px+pw-3,py+4,1,1);
     drawText(pt,px+5,py+2,PAL.stem,1);
-    // hojitas decorando la placa
     ctx.fillStyle=P.tree;
     ctx.fillRect(px-5,py+2,4,2); ctx.fillRect(px-7,py+4,3,2);
     ctx.fillRect(px+pw+1,py+2,4,2); ctx.fillRect(px+pw+4,py+4,3,2);
